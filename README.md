@@ -7,7 +7,7 @@ Cell segmentation has been a popular topic these years. Taking advantage of hist
 - Simple segmentation
 - Marker-controlled watershed segmentation
   - ImageJ
-  - Cellprofiler
+  - CellProfiler
   - Scikit-image
 - Machine learning based
   - Cellpose
@@ -15,9 +15,27 @@ Cell segmentation has been a popular topic these years. Taking advantage of hist
 
 Here, we make use of the mouse embryo tissue (E14.5 E1S3) from Stereo-seq to compare the performance and illustrate the characteristics of these segmentation methods.
 
-### **Method**
-
-We first 
+### **Workflow**
 <p align="left" width="100%">
     <img width="50%" src="https://github.com/wnbo9/st/blob/main/workflow.jpg">
 </p>
+
+1. **Image registration.** We first manually register the H&E image and the location image of barcodes. Then we crop the forebrain image from the mouse H&E image.
+   - *forebrain.jpg*
+2. **Cell segmentation.** We then apply the cell segmentation on the cropped forebrian H&E image. We need to get the labeled mask image of these cells.
+   - *mask.jpg*
+3. **Information extraction.** Using Python, we can specify all pixels with their corresponding cell, and the information of cells, including centroid, area and perimeter.
+   - *mask.csv*
+   - *info.csv*
+4. **Data aggregation.** We use *mask.csv* and *info.csv* to aggregate the barcodes within each cell and get a CGE matrix.
+   - *CGE.csv*
+5. **SpatialPCA analysis.** We run SpatialPCA to get the spatial PCs and the normalized expression matrix. Then we use louvain clustering with spatial PCs to get the domain cluster lables.
+   - *spatial PCs*
+   - *domain labels*
+6. **Seurat analysis.** With the domain labels, we can create Seurat object and dectect the differential genes among these domains.
+7. **Ground-truth annotation.** With the plot of some marker genes, we can plot the ground truth of the tissue structure, and use Photoshop to annotate these structures.
+   - *annotation.jpg*
+8. **ARI calculation.** With the *annotation.jpg* and *info.csv*, we can specify the annotation labels for all cells as ground truth. Then with the *domain labels* from SpatialPCA, we canc calculate the ARI.
+   - *ARI*
+9. ...
+
