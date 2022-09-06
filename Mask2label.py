@@ -1,40 +1,31 @@
-import pandas as pd
-import numpy as np
-import skimage
-
-
-from skimage import data, util, measure
-from skimage.filters import threshold_otsu, threshold_local
-from skimage.measure import label, regionprops, regionprops_table
-from skimage.segmentation import watershed
-from skimage.feature import peak_local_max
-
-from scipy import ndimage as ndi
-import matplotlib.pyplot as plt
-import tifffile as tiff
-
+# load modules
 import cv2
 import pandas as pd
-from skimage import data, util, measure
+import matplotlib.pyplot as plt
+from skimage import measure
 from skimage.measure import label, regionprops, regionprops_table
 
-ww = cv2.imread('./DP11.png', cv2.IMREAD_GRAYSCALE)
+# load images (labeled mask)
+img = cv2.imread('./OneDrive/Desktop/forebrain_testStarDist.png', cv2.IMREAD_GRAYSCALE)
+plt.imshow(img)
 
-tt = measure.label(ww)
+# create a img_size dataframe, so that each pixel can be responded to its cell
+img_label = measure.label(img)
+img_label = pd.DataFrame(img_label)
+#save
+img_label.to_csv('./OneDrive/Desktop/mask.csv')
+plt.imshow(img_label)
 
-plt.imshow(ww)
-
-pd.DataFrame(tt).iloc[3000:3100, 1000:1100]
-
-pd.DataFrame(tt).to_csv('./Aug/cellprofiler/cell.csv')
-
+# extrat the cell information of each cell
 props = regionprops_table(tt, properties=('centroid',
-                                          'area', 'area_bbox', 'area_convex',
-                                          'orientation',
-                                          'axis_major_length',
-                                          'axis_minor_length',
+                                          'area',
+                                          'perimeter',
                                           'feret_diameter_max',
-                                         'solidity',
-                                         'perimeter'))
-
-pd.DataFrame(props).to_csv('./Aug/cellprofiler/info.csv')
+                                          'solidity',
+                                          'axis_major_length',
+                                          'axis_minor_length'))
+props = pd.DataFrame(props)
+props['AR'] = props['axis_major_length'] / props['axis_minor_length']
+# save
+# Attention: in the mask.csv, '0' means the background, and the numbers represent the cells. Meanwhile, the index of info.csv starts from '0', here it means '1' in the mask.csv
+props.to_csv('./OneDrive/Desktop/info.csv')
