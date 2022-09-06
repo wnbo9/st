@@ -18,6 +18,6 @@ Here, we make use of the mouse embryo tissue (E14.5 E1S3) from Stereo-seq to com
 ### **Method**
 
 We first 
-<p align="center" width="30%">
-    <img src="https://github.com/wnbo9/st/blob/main/workflow.jpg">
+<p align="center" width="100%">
+    <img width="33%" src="https://github.com/wnbo9/st/blob/main/workflow.jpg">
 </p>
