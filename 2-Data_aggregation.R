@@ -81,5 +81,6 @@ for (i in 1:2) {
     # release RAM
     rm(mat_temp)
     rm(mat_keep)
+    rm(CGE)
   }
 }
