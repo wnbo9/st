@@ -89,7 +89,7 @@ for (i in 1:2) {
     # save CGE
     print('writing')
     output = paste0('stereo/CGE/', region[i], '_CGE_', method[j], '.RData')
-    save(countmat, output)
+    save(countmat, file = output)
     
     # 
     rm(countmat)
