@@ -1,44 +1,77 @@
+# load packages
 library(dplyr)
 library(data.table)
 library(ggplot2)
+library(reshape2)
 
+# load barcode file
 dat = fread("stereo/L20220116011.export.bin1.txt", header = T)
 colnames(dat) = c("geneID", "y", "x", "MIDCounts")
-dat$y = max(dat$y) + min(dat$y) - dat$y
-dat = cbind(dat, c(1:dim(dat)[1]))
-dat = cbind(dat, rep(-1, dim(dat)[1]))
-colnames(dat) = c("geneID", "y", "x", "MIDCounts", "ID", "cellID")
+# registration with histology image
+dat$x = dat$x - 288
+dat$y = dat$y - 861
 
 
-dat = dat %>% filter(x <= 4000 & 3000<=y & y<=10000)
-dat$y = dat$y - 3000
-dat$y[which(dat$y==0)] = 1
-dat[1:10000,] %>% ggplot(aes(x=x,y=y)) + geom_point(size=0.1) + coord_fixed(ratio = 1)
+### forebrain
+# select the barcodes within the forebrain region
+mat_f = dat %>% filter(x<=4000 & 14000<y & y<=20000)
+mat_f$y = mat_f$y - 14000
+mat_f = cbind(mat_f, rep(0, dim(mat_f)[1]))
+colnames(mat_f) = c("geneID", "y", "x", "MIDCounts", "cellID")
+### GI tract
+# select the barcodes within the GI tract region
+mat_g = dat %>% filter(3500<x & x<=6500 & 4000<y & y<=9000)
+mat_g$x = mat_g$x - 3500
+mat_g$y = mat_g$y - 4000
+mat_g = cbind(mat_g, rep(0, dim(mat_g)[1]))
+colnames(mat_g) = c("geneID", "y", "x", "MIDCounts", "cellID")
 
 
-info = fread("ARI/Fiji/cell.csv", header = T)
-info = info[,-1]
-info2 = as.matrix(info)
-rm(info)
 
-myFun=function(obj){
+# load the label csv file
+region = c('forebrain','tract')
+method = c('simple','imagej','cellprofiler','scikit','stardist','cellpose')
+
+# function of aggregation
+myFun = function(obj){
   c1 = as.integer(obj[['y']])
   c2 = as.integer(obj[['x']])
-  return(info2[c1,c2][[1]])
+  return(label[c1, c2][[1]])
 }
 
-vec = apply(dat, 1, myFun)
-dat$cellID = vec
-
-
-dat_keep = dat %>% filter(cellID != 0)
-
-
-dat_temp = dat_keep %>% group_by(geneID, cellID) %>% summarise(sum = sum(MIDCounts))
-
-
-
-library(reshape2)
-DGE = dcast(dat_temp, geneID ~ cellID)
-DGE[is.na(DGE)] = 0
-
+#
+for (i in 1:2) {
+  for (j in 1:6) {
+    
+    # specify file
+    file = paste0('stereo/label_mask/', region[i], '_label_', method[j], '.csv')
+    # load the file
+    label = fread(file, header = FALSE)
+    label = label[-1,]
+    label = label[,-1]
+    label = as.matrix(label)
+    
+    if(i == 1){
+      mat_temp = mat_f
+    } else{
+      mat_temp = mat_g
+    }
+    
+    # specify the cell labels
+    vec = apply(mat_temp, 1, myFun)
+    mat_temp$cellID = vec
+    
+    # keep the barcodes within cells
+    mat_keep = mat_temp %>% filter(cellID != 0)
+    # summarise the barcodes within cells
+    mat_keep = mat_keep %>% group_by(geneID, cellID) %>% summarise(sum = sum(MIDCounts))
+    # reshape
+    CGE = dcast(dat_keep, geneID ~ cellID)
+    # remove na
+    CGE[is.na(CGE)] = 0
+    
+    # save CGE
+    output = paste0('stereo/CGE/', region[i], '_CGE_', method[j], '.csv')
+    write.csv(CGE, output)
+  }
+}
