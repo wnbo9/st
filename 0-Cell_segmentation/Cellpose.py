@@ -39,7 +39,7 @@ masks, flows, styles, diams = model.eval(imgs, diameter=None, channels=channels)
 mm = masks[0]
 img_label = measure.label(mm)
 plt.imshow(img_label)
-pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/mask.csv')
+pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/label.csv')
 
 # extract cell informatipn
 props = regionprops_table(img_label, properties=('centroid',
