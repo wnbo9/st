@@ -3,6 +3,7 @@ library(dplyr)
 library(data.table)
 library(ggplot2)
 library(reshape2)
+library(Matrix)
 
 # load barcode file
 dat = fread("stereo/L20220116011.export.bin1.txt", header = T)
@@ -73,14 +74,24 @@ for (i in 1:2) {
     # remove na
     CGE[is.na(CGE)] = 0
     
-    # save CGE
-    print('writing')
-    output = paste0('stereo/CGE/', region[i], '_CGE_', method[j], '.csv')
-    write.csv(CGE, output)
-    
     # release RAM
     rm(mat_temp)
     rm(mat_keep)
+    
+    # make sparse matrix
+    countmat = CGE[,-1]
+    countmat = as.matrix(countmat)
+    rownames(countmat) = CGE[,1]
+    colnames(countmat) = paste0('cell', colnames(CGE)[-1])
+    countmat = Matrix(countmat, sparse = TRUE)
     rm(CGE)
+    
+    # save CGE
+    print('writing')
+    output = paste0('stereo/CGE/', region[i], '_CGE_', method[j], '.RData')
+    save(countmat, output)
+    
+    # 
+    rm(countmat)
   }
 }
