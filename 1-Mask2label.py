@@ -6,18 +6,18 @@ from skimage import measure
 from skimage.measure import label, regionprops, regionprops_table
 
 # load images (labeled mask)
-img = cv2.imread('./OneDrive/Desktop/forebrain_testStarDist.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('./OneDrive/Desktop/mask.png', cv2.IMREAD_GRAYSCALE)
 plt.imshow(img)
 
 # create a img_size dataframe, so that each pixel can be responded to its cell
 img_label = measure.label(img)
-img_label = pd.DataFrame(img_label)
+
 #save
-img_label.to_csv('./OneDrive/Desktop/mask.csv')
+pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/label.csv')
 plt.imshow(img_label)
 
 # extrat the cell information of each cell
-props = regionprops_table(tt, properties=('centroid',
+props = regionprops_table(img_label, properties=('centroid',
                                           'area',
                                           'perimeter',
                                           'feret_diameter_max',
