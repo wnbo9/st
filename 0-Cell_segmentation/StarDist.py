@@ -42,7 +42,7 @@ plt.title("prediction + input overlay")
 # measure the mask to label
 img_label = measure.label(labels)
 plt.imshow(img_label)
-pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/mask.csv')
+pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/label.csv')
 
 # extract the cell information
 props = regionprops_table(img_label, properties=('centroid',
