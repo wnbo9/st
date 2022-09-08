@@ -6,18 +6,15 @@ import matplotlib.pyplot as plt
 from skimage import measure
 from skimage.measure import label, regionprops_table
 
-from cellpose import models
-from cellpose.io import imread
+from cellpose import models, io
+
+# load image
+img = cv2.imread('./stereo/forebrain.png', cv2.IMREAD_GRAYSCALE)
+plt.imshow(img)
 
 # cell segmentation
 # model_type='cyto' or 'nuclei' or 'cyto2'
 model = models.Cellpose(model_type='cyto')
-
-# list of files
-# PUT PATH TO YOUR FILES HERE!
-files = ['./OneDrive/Desktop/forebrain_test.png']
-
-imgs = [imread(f) for f in files]
 
 # define CHANNELS to run segementation on
 # grayscale=0, R=1, G=2, B=3
@@ -33,13 +30,13 @@ channels = [0,0]
 # you can set the average cell `diameter` in pixels yourself (recommended)
 # diameter can be a list or a single number for all images
 
-masks, flows, styles, diams = model.eval(imgs, diameter=None, channels=channels)
+masks, flows, styles, diams = model.eval(img, diameter=None, channels=channels)
 
 # mask to label
-mm = masks[0]
 img_label = measure.label(mm)
 plt.imshow(img_label)
-pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/label.csv')
+pd.DataFrame(img_label).to_csv('./OneDrive/Desktop/label_cellpose.csv')
+
 
 # extract cell informatipn
 props = regionprops_table(img_label, properties=('centroid',
@@ -51,4 +48,4 @@ props = regionprops_table(img_label, properties=('centroid',
                                           'axis_minor_length'))
 props = pd.DataFrame(props)
 props['AR'] = props['axis_major_length'] / props['axis_minor_length']
-props.to_csv('./OneDrive/Desktop/info.csv')
+props.to_csv('./OneDrive/Desktop/info_cellpose.csv')
