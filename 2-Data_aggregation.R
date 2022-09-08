@@ -42,7 +42,7 @@ myFun = function(obj){
 #
 for (i in 1:2) {
   for (j in 1:6) {
-    
+    print(paste0(region[1], ': ', method[j]))
     # specify file
     file = paste0('stereo/label_mask/', region[i], '_label_', method[j], '.csv')
     # load the file
@@ -58,20 +58,28 @@ for (i in 1:2) {
     }
     
     # specify the cell labels
+    print('specifying')
     vec = apply(mat_temp, 1, myFun)
     mat_temp$cellID = vec
     
     # keep the barcodes within cells
+    print('summarising')
     mat_keep = mat_temp %>% filter(cellID != 0)
     # summarise the barcodes within cells
     mat_keep = mat_keep %>% group_by(geneID, cellID) %>% summarise(sum = sum(MIDCounts))
     # reshape
-    CGE = dcast(dat_keep, geneID ~ cellID)
+    print('reshaping')
+    CGE = dcast(mat_keep, geneID ~ cellID)
     # remove na
     CGE[is.na(CGE)] = 0
     
     # save CGE
+    print('writing')
     output = paste0('stereo/CGE/', region[i], '_CGE_', method[j], '.csv')
     write.csv(CGE, output)
+    
+    # release RAM
+    rm(mat_temp)
+    rm(mat_keep)
   }
 }
