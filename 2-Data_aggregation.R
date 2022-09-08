@@ -43,7 +43,7 @@ myFun = function(obj){
 #
 for (i in 1:2) {
   for (j in 1:6) {
-    print(paste0(region[1], ': ', method[j]))
+    print(paste0(region[i], ': ', method[j]))
     # specify file
     file = paste0('stereo/label_mask/', region[i], '_label_', method[j], '.csv')
     # load the file
