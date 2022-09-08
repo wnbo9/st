@@ -25,7 +25,7 @@ Here, we make use of the mouse embryo tissue (E14.5 E1S3) from Stereo-seq to com
    - *forebrain.jpg*
 2. **Cell segmentation.** We then apply the cell segmentation on the cropped forebrian H&E image. We need to get the labeled mask image of these cells.
    - *mask.jpg*
-3. **Information extraction.** Using Python, we can specify all pixels with their corresponding cell, and the information of cells, including centroid, area and perimeter. The files can be viewed through [Dropbox]( https://www.dropbox.com/sh/g8kfbqrtza3u9ex/AADTZNbPNKWDgHV4LsB__RCna?dl=0).
+3. **Information extraction.** Using Python, we can specify all pixels with their corresponding cell, and the information of cells, including centroid, area and perimeter. The files can be viewed through [Dropbox](https://www.dropbox.com/sh/g8kfbqrtza3u9ex/AADTZNbPNKWDgHV4LsB__RCna?dl=0).
    - *mask.csv*
    - *info.csv*
 4. **Data aggregation.** We use *mask.csv* and *info.csv* to aggregate the barcodes within each cell and get a CGE matrix.
