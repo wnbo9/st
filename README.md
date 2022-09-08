@@ -33,7 +33,7 @@ Here, we make use of the mouse embryo tissue (E14.5 E1S3) from Stereo-seq to com
 5. **SpatialPCA analysis.** We run SpatialPCA to get the spatial PCs and the normalized expression matrix. Then we use louvain clustering with spatial PCs to get the domain cluster lables.
    - *spatial PCs*
    - *domain labels*
-6. **Seurat analysis.** With the domain labels, we can create Seurat object and dectect the differential genes among these domains.
+6. **Seurat analysis.** With the domain labels, we can create Seurat object. The following steps include 1) plotting UMAP with the labels, and 2) dectecting the differential genes among these domains.
 7. **Ground-truth annotation.** With the plot of some marker genes, we can plot the ground truth of the tissue structure, and use Photoshop to annotate these structures.
    - *annotation.jpg*
 8. **ARI calculation.** With the *annotation.jpg* and *info.csv*, we can specify the annotation labels for all cells as ground truth. Then with the *domain labels* from SpatialPCA, we canc calculate the ARI.
