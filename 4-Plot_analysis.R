@@ -7,8 +7,6 @@ library(SeuratObject)
 load('stereo/SpatialPCA/SpatialPCA_forebrain_simple.RData')
 
 # rename the cluster
-# umap plot
-DimPlot(st, reduction = "umap")
 Seu <- RenameIdents(object = Seu, 
                     `cluster1` = "Meninges", `cluster3` = "LPall", `cluster6` = "DPall_v",
                     `cluster4` = 'DPall_s', `cluster5` = 'DPall_i', `cluster2`='DPall_p')
@@ -18,6 +16,8 @@ cbp = c("#FD7446" ,"#709AE1", "#9EDAE5",
 
 # spatial plot of marker gene
 SpatialFeaturePlot(st, features = 'Pbx3', pt.size.factor = 1.5)
+# umap plot
+DimPlot(Seu, reduction = "umap", cbp)
 
 # spatial plot of domains
 plot_cluster(location=SpatialPCA_result$location,
