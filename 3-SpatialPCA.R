@@ -4,6 +4,7 @@ library(SpatialPCA)
 library(bluster)
 library(Seurat)
 library(MAST)
+library(SeuratObject)
 
 # load cell info
 info = read.csv('D:/File/Summer_I/Sep/label_mask/forebrain/forebrain_info_simple.csv')
@@ -80,6 +81,21 @@ Seu = SCTransform(Seu, return.only.var.genes = FALSE, variable.features.n = NULL
 Seu <- RunPCA(Seu, features = VariableFeatures(object = Seu))
 Seu <- FindNeighbors(Seu, dims = 1:10)
 Seu <- FindClusters(Seu, resolution = 0.5)
+
+
+#
+st = AddMetaData(object = Seu, metadata = data.frame(SpatialPCA_result$location))
+st@images$image = new(
+  Class='SlideSeq',
+  assay='Spatial',
+  key='image_',
+  coordinates=st@meta.data[,c("ycoord", "xcoord")]
+)
+SpatialFeaturePlot(st, features = 'Pbx3', pt.size.factor = 1.5)
+
+
+#
+
 
 Idents(Seu) = paste0("cluster",metadata$SpatialPCA_louvain)
 DE_gene = list()
@@ -170,6 +186,5 @@ make_lineplot("Nfib",metadata$SpatialPCA_louvain,clusterorder)
 make_lineplot("Col1a2",metadata$SpatialPCA_louvain,clusterorder) # decode the most abundant protein of skin
 
 #dev.off()
-
 
 
