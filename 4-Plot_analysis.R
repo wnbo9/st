@@ -5,6 +5,8 @@ library(SeuratObject)
 
 # load SpatialPCA_resul
 load('stereo/SpatialPCA/SpatialPCA_forebrain_simple.RData')
+# load countmat for plot
+load('stereo/CGE/forebrain_CGE_simple.csv')
 
 # rename the cluster
 Seu <- RenameIdents(object = Seu, 
