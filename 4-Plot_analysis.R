@@ -31,10 +31,14 @@ plot_cluster(location=SpatialPCA_result$location,
 DE_gene = list()
 DEgene_spatialPCA=c()
 each_num = c()
-for(cluster in 1:6){
+
+lay = c("Meninges", "LPall", "DPall_v",
+        'DPall_s', 'DPall_i', 'DPall_p')
+for(i in 1:6){
+  cluster = lay[i]
   print(cluster)
   
-  DE_gene[[cluster]] = FindMarkers(Seu, ident.1 = paste0("cluster",cluster), ident.2 =NULL, test.use = "MAST")
+  DE_gene[[cluster]] = FindMarkers(Seu, ident.1 = cluster, ident.2 =NULL, test.use = "MAST")
   each_num[cluster] = dim(DE_gene[[cluster]])[1]
   DEgene_spatialPCA = c(DEgene_spatialPCA, rownames(DE_gene[[cluster]]))
 }
