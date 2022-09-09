@@ -34,7 +34,7 @@ DE_gene = list()
 DEgene_spatialPCA=c()
 each_num = c()
 
-lay = c("Meninges", "LPall", "DPall_v",
+layer = c("Meninges", "LPall", "DPall_v",
         'DPall_s', 'DPall_i', 'DPall_p')
 for(i in 1:6){
   cluster = lay[i]
@@ -102,18 +102,18 @@ make_lineplot = function(genename,clusterlabel,cluster_order){
 
 #pdf("Markergenes_lineplot_SpatialPCA_slideseqV2.pdf",width=3,height=10)
 # DPall_v
-make_lineplot("Fabp7",metadata$SpatialPCA_louvain,clusterorder)
+make_lineplot("Fabp7",metadata$SpatialPCA_louvain,layer)
 # DPall_p
-make_lineplot("Sox11",metadata$SpatialPCA_louvain,clusterorder)
+make_lineplot("Sox11",metadata$SpatialPCA_louvain,layer)
 # DPall_i
-make_lineplot("Tmsb4x",metadata$SpatialPCA_louvain,clusterorder)
+make_lineplot("Tmsb4x",metadata$SpatialPCA_louvain,layer)
 # Dpall_s
-make_lineplot("Map1b",metadata$SpatialPCA_louvain,clusterorder)
+make_lineplot("Map1b",metadata$SpatialPCA_louvain,layer)
 # LPall
-make_lineplot("Pbx3",metadata$SpatialPCA_louvain,clusterorder)
-make_lineplot("Nfib",metadata$SpatialPCA_louvain,clusterorder)
+make_lineplot("Pbx3",metadata$SpatialPCA_louvain,layer)
+make_lineplot("Nfib",metadata$SpatialPCA_louvain,layer)
 # Meninges
-make_lineplot("Col1a2",metadata$SpatialPCA_louvain,clusterorder) # decode the most abundant protein of skin
+make_lineplot("Col1a2",metadata$SpatialPCA_louvain,layer) # decode the most abundant protein of skin
 
 #dev.off()
 
