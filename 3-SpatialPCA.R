@@ -76,6 +76,5 @@ for (i in 1:2) {
     )
     
     save(SpatialPCA_result, Seu, file = paste0('stereo/SpatialPCA/SpatialPCA_', region[i], '_', method[j], '.RData'))
-    rm(list=ls())
   }
 }
