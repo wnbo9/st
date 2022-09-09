@@ -3,18 +3,23 @@ library(ggplot2)
 library(Seurat)
 library(SeuratObject)
 
+# load SpatialPCA_resul
+load('stereo/SpatialPCA/SpatialPCA_forebrain_simple.RData')
+
+# rename the cluster
 # umap plot
 DimPlot(st, reduction = "umap")
+Seu <- RenameIdents(object = Seu, 
+                    `cluster1` = "Meninges", `cluster3` = "LPall", `cluster6` = "DPall_v",
+                    `cluster4` = 'DPall_s', `cluster5` = 'DPall_i', `cluster2`='DPall_p')
+# plot color
+cbp = c("#FD7446" ,"#709AE1", "#9EDAE5",
+        "#DE9ED6","#BCBD22" ,"#31A354")
 
 # spatial plot of marker gene
 SpatialFeaturePlot(st, features = 'Pbx3', pt.size.factor = 1.5)
 
-plot_cluster(location=SpatialPCA_result$location,
-             SpatialPCA_louvain,
-             pointsize=1.5,
-             title_in=paste0("Forebrian_Simple"),
-             color_in=cbp,legend="right") + coord_fixed(ratio=1)
-#
+# spatial plot of domains
 plot_cluster(location=SpatialPCA_result$location,
              Seu@active.ident,
              pointsize=1.5,
@@ -22,9 +27,7 @@ plot_cluster(location=SpatialPCA_result$location,
              color_in=cbp,legend="right") + coord_fixed(ratio=1)
 
 
-
-
-
+# find domain specific genes
 DE_gene = list()
 DEgene_spatialPCA=c()
 each_num = c()
@@ -55,10 +58,7 @@ make_lineplot = function(genename,clusterlabel,cluster_order){
     n = n(),
     se = sd / sqrt(n))
   dattt =as.data.frame(ca)
-  cbp_spatialpca = c( "#FD7446" ,"#709AE1", "#31A354","#9EDAE5",
-                      "#DE9ED6" ,"#BCBD22", "#CE6DBD" ,"#DADAEB" ,
-                      "yellow", "#FF9896","#91D1C2", "#C7E9C0" ,
-                      "#6B6ECF", "#7B4173" )
+  cbp_spatialpca = cbp
   p<- ggplot(dattt, aes(x=cluster, y=mean, color=cluster,group=cluster)) + 
     #geom_bar(stat="identity", color="black", position=position_dodge()) +
     scale_fill_manual(values = cbp_spatialpca)+
@@ -93,8 +93,6 @@ make_lineplot = function(genename,clusterlabel,cluster_order){
     labs(title=paste0(genename),x="Layer", y = "Expression")
   return(p)
 }
-
-clusterorder=c(1,2,4,5,6,3)
 
 #pdf("Markergenes_lineplot_SpatialPCA_slideseqV2.pdf",width=3,height=10)
 #3
