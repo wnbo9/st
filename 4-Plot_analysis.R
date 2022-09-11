@@ -225,3 +225,10 @@ make_lineplot("Myh11",Seu@active.ident,layer)
 make_lineplot("Cdk8",Seu@active.ident,layer)
 #dev.off()
 
+DE_gene[["Mucosa"]] %>% arrange(desc(avg_log2FC))
+
+DEgene_spatialPCA = c('H19', 'Hsp90ab1', 'Rpl14', 'Oat', 'Rpl41',
+                      'Hba-a1', 'Hbb-bs', 'Hba-a2', 'Hbb-bt', 'Hbb-y',
+                      'Acta2', 'Myh11', 'Actg2', 'Myl9', 'Mylk',
+                      'Cdk8', 'Cmss1', 'Jarid2', 'Col3a1', 'Camk1d')
+DoHeatmap(Seu, features = DEgene_spatialPCA)
